@@ -541,7 +541,7 @@
     </div>
 
     <!-- ── Histogramme intérêts annuels ── -->
-    <div id="view-histo" class="chart-wrap chart-histo" hidden>
+    <div id="view-histo" class="chart-wrap chart-histo">
       <canvas id="histo-chart"></canvas>
     </div>
 
@@ -968,8 +968,8 @@
 
   PAIRS.forEach(([, slId]) => updateTrack($(slId)));
   setLinked(true);
-  $('view-histo').hidden = true;
-  $('btn-v-histo').classList.remove('active');
+  $('view-histo').hidden = false;
+  $('btn-v-histo').classList.add('active');
   loadFromURL();
   recompute();
   chart.hide(1); // Pessimiste masquée par défaut
