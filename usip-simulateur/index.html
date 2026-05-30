@@ -247,6 +247,24 @@
     }
     .btn-add:hover { border-color: var(--neon); color: var(--neon); }
 
+    .btn-share {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: .82rem;
+      padding: .35rem .8rem;
+      cursor: pointer;
+      transition: border-color .15s, color .15s;
+      white-space: nowrap;
+    }
+    .btn-share:hover { border-color: #a78bfa; color: #a78bfa; }
+    .add-share-row { display: flex; align-items: center; gap: .75rem; margin-top: .5rem; }
+
     /* ── Summary ── */
     .summary {
       display: grid;
@@ -406,7 +424,13 @@
         <tbody id="acts-body"></tbody>
       </table>
     </div>
-    <button class="btn-add" id="btn-add" title="Ajouter un acte">+</button>
+    <div class="add-share-row">
+      <button class="btn-add" id="btn-add" title="Ajouter un acte">+</button>
+      <button class="btn-share" id="btn-share" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Partager cette simulation
+      </button>
+    </div>
 
     <!-- ── Résumé ── -->
     <div class="summary">
@@ -681,10 +705,51 @@ $('btn-add').addEventListener('click', () => {
   $('acts-body').lastElementChild?.querySelector('.inp-code')?.focus();
 });
 
+// ── Partage par lien ──────────────────────────────────────────────────────
+function share() {
+  const params = new URLSearchParams({
+    occ:  st.occ,
+    dep:  st.depPct,
+    docs: st.docs,
+    beds: $('beds').value,
+    acts: JSON.stringify(acts.map(a => ({ code: a.code, label: a.label, base: a.base, dep: a.dep, apd: a.apd }))),
+  });
+  const url = `${location.href.split('?')[0]}?${params}`;
+  const btn = $('btn-share');
+  const orig = btn.innerHTML;
+  navigator.clipboard.writeText(url).then(() => {
+    btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Lien copié !`;
+    btn.style.borderColor = '#a78bfa'; btn.style.color = '#a78bfa';
+    setTimeout(() => { btn.innerHTML = orig; btn.style.borderColor = ''; btn.style.color = ''; }, 2500);
+  }).catch(() => { prompt('Copiez ce lien :', url); });
+}
+$('btn-share').addEventListener('click', share);
+
+// ── Chargement depuis URL ──────────────────────────────────────────────────
+function loadFromURL() {
+  const p = new URLSearchParams(location.search);
+  if (!p.has('occ') && !p.has('acts')) return;
+  if (p.has('occ'))  { st.occ    = parseInt(p.get('occ'));    $('occ-sl').value = st.occ;    $('occ-val').textContent = st.occ + ' %'; }
+  if (p.has('dep'))  { st.depPct = parseInt(p.get('dep'));    $('dep-sl').value = st.depPct; $('dep-val').textContent = st.depPct + ' %'; }
+  if (p.has('beds')) { $('beds').value = p.get('beds'); }
+  if (p.has('docs')) {
+    st.docs = parseInt(p.get('docs'));
+    document.querySelectorAll('.doc-btn').forEach(b => b.classList.toggle('active', +b.dataset.n === st.docs));
+  }
+  if (p.has('acts')) {
+    try {
+      const loaded = JSON.parse(p.get('acts'));
+      acts = loaded.map((a, i) => ({ id: i + 1, code: a.code, label: a.label, base: +a.base, dep: +a.dep, apd: +a.apd }));
+      uid = acts.length + 1;
+    } catch(e) {}
+  }
+}
+
 // ── Init ───────────────────────────────────────────────────────────────────
 initDonut();
 trackFill($('occ-sl'));
 trackFill($('dep-sl'));
+loadFromURL();
 render();
 </script>
 </body>
