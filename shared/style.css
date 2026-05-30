@@ -1,0 +1,134 @@
+/* ============================================
+   Feuille de style commune à toutes les applis
+   ============================================ */
+
+:root {
+  --color-primary: #2c7a7b;
+  --color-primary-dark: #1e5a5b;
+  --color-bg: #f7fafc;
+  --color-card: #ffffff;
+  --color-text: #2d3748;
+  --color-text-muted: #718096;
+  --color-border: #e2e8f0;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.10);
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding: 1.5rem;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding: 1rem 0;
+}
+
+h1 {
+  font-size: 1.8rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+header p {
+  color: var(--color-text-muted);
+  font-size: 1rem;
+}
+
+/* Grille des applis sur le dashboard */
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.25rem;
+}
+
+.app-card {
+  display: block;
+  background: var(--color-card);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: var(--shadow);
+  border: 1px solid var(--color-border);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.app-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--color-primary);
+}
+
+.app-card h2 {
+  font-size: 1.15rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+.app-card p {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.app-card .category {
+  display: inline-block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Bouton retour */
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--color-primary);
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* Pour les pages d'appli */
+.app-content {
+  background: var(--color-card);
+  border-radius: var(--radius);
+  padding: 2rem;
+  box-shadow: var(--shadow);
+}
+
+footer {
+  text-align: center;
+  margin-top: 3rem;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+/* Adaptation mobile */
+@media (max-width: 600px) {
+  body { padding: 1rem; }
+  h1 { font-size: 1.5rem; }
+  .app-content { padding: 1.25rem; }
+}

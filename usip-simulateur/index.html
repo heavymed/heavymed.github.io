@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulateur USIP</title>
+  <link rel="stylesheet" href="../shared/style.css">
+  <style>
+    /* ── Thème bleu marine néon ── */
+    :root {
+      --neon:       #4dabff;
+      --bg-0:       #06080f;
+      --bg-1:       #0b0f1e;
+      --bg-2:       #111827;
+      --border:     #1a2a45;
+      --text:       #dce8ff;
+      --text-muted: #6b84b8;
+      --c-red:      #ff5e78;
+      --c-green:    #26d97f;
+      --c-violet:   #b47aff;
+      --c-orange:   #ff9f43;
+    }
+
+    body {
+      background:
+        radial-gradient(1200px 600px at 20% -10%, rgba(77,171,255,.10), transparent 60%),
+        radial-gradient(900px 500px at 110% 30%,  rgba(77,171,255,.05), transparent 60%),
+        var(--bg-0);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .container { max-width: 1100px; }
+
+    .back-link { color: var(--neon); opacity: .85; }
+    .back-link:hover { opacity: 1; text-shadow: 0 0 8px var(--neon); }
+
+    header h1 {
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      text-shadow: 0 0 24px rgba(77,171,255,.35);
+    }
+    header h1 .accent { color: var(--neon); text-shadow: 0 0 16px var(--neon); }
+
+    .app-content {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      box-shadow: 0 0 0 1px rgba(77,171,255,.05), 0 20px 60px rgba(0,0,0,.5);
+    }
+
+    /* ── Section titles ── */
+    .section-title {
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: .9rem;
+    }
+
+    /* ── Parameters bar ── */
+    .params-bar {
+      display: grid;
+      grid-template-columns: auto 1fr 1fr auto;
+      gap: 1.5rem;
+      align-items: center;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .param-group { display: flex; flex-direction: column; gap: .3rem; }
+    .param-group label {
+      font-size: .68rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    .param-val { color: var(--neon); font-weight: 700; }
+
+    .inp-param {
+      background: var(--bg-0);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .4rem .65rem;
+      color: var(--text);
+      font-family: inherit;
+      font-size: .95rem;
+      width: 80px;
+      text-align: center;
+    }
+    .inp-param:focus { outline: none; border-color: var(--neon); box-shadow: 0 0 0 3px rgba(77,171,255,.15); }
+    .inp-param::-webkit-outer-spin-button,
+    .inp-param::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .inp-param[type=number] { -moz-appearance: textfield; }
+
+    /* ── Sliders ── */
+    .slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 3px;
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+      margin-top: .4rem;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--neon);
+      cursor: pointer;
+      box-shadow: 0 0 0 3px rgba(77,171,255,.2), 0 0 10px rgba(77,171,255,.4);
+    }
+    .slider::-moz-range-thumb {
+      width: 16px; height: 16px;
+      border-radius: 50%; border: none;
+      background: var(--neon);
+    }
+
+    /* ── Médecins toggle ── */
+    .doc-toggle { display: flex; gap: .35rem; margin-top: .15rem; }
+    .doc-btn {
+      background: var(--bg-0);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: .9rem;
+      font-weight: 700;
+      padding: .3rem .7rem;
+      cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .doc-btn.active {
+      background: rgba(77,171,255,.12);
+      border-color: var(--neon);
+      color: var(--neon);
+    }
+
+    /* ── Table ── */
+    .acts-wrap { overflow-x: auto; margin-bottom: .75rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .875rem; white-space: nowrap; }
+
+    thead th {
+      padding: .55rem .7rem;
+      font-size: .65rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--text-muted);
+      background: var(--bg-2);
+      border-bottom: 1px solid var(--border);
+      text-align: right;
+      font-weight: 700;
+    }
+    thead th:first-child,
+    thead th:nth-child(2) { text-align: left; }
+    thead th:last-child { text-align: center; }
+
+    tbody tr { border-bottom: 1px solid rgba(255,255,255,.04); transition: background .1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,.02); }
+    tbody td { padding: .5rem .7rem; vertical-align: middle; }
+
+    .color-dot {
+      display: inline-block;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      margin-right: .4rem;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
+    .inp-cell {
+      background: var(--bg-2);
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: .3rem .5rem;
+      color: var(--text);
+      font-family: inherit;
+      font-size: .875rem;
+      transition: border-color .15s, background .15s;
+    }
+    .inp-cell:focus { outline: none; border-color: var(--neon); background: var(--bg-0); }
+    .inp-cell::-webkit-outer-spin-button,
+    .inp-cell::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .inp-cell[type=number] { -moz-appearance: textfield; }
+
+    .inp-code  { width: 130px; }
+    .inp-label { width: 235px; }
+    .inp-num   { width: 72px; text-align: right; }
+    .inp-base  { width: 72px; text-align: right; color: var(--text-muted); }
+
+    td.right { text-align: right; }
+    td.center { text-align: center; }
+
+    .cell-subtotal { font-weight: 600; color: var(--text); }
+    .cell-muted    { color: var(--text-muted); }
+
+    /* mini share bar */
+    .share-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      justify-content: flex-end;
+    }
+    .share-track {
+      display: inline-block;
+      width: 48px; height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .share-fill { height: 100%; border-radius: 2px; }
+
+    .btn-del {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 1.05rem;
+      padding: .2rem .45rem;
+      border-radius: 4px;
+      line-height: 1;
+      transition: color .15s, background .15s;
+    }
+    .btn-del:hover { color: var(--c-red); background: rgba(255,94,120,.1); }
+
+    .btn-add {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px; height: 30px;
+      background: transparent;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: border-color .15s, color .15s;
+      margin-top: .5rem;
+    }
+    .btn-add:hover { border-color: var(--neon); color: var(--neon); }
+
+    /* ── Summary ── */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .65rem;
+      margin: 1.5rem 0;
+    }
+    .stat {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .85rem 1rem;
+    }
+    .stat .stat-label {
+      font-size: .65rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--text-muted);
+      margin-bottom: .35rem;
+    }
+    .stat .stat-value { font-size: 1.1rem; font-weight: 700; }
+    .stat.s-total .stat-value { color: var(--neon); text-shadow: 0 0 14px rgba(77,171,255,.4); }
+    .stat.s-base  .stat-value { color: var(--text-muted); }
+    .stat.s-dep   .stat-value { color: #74c0ff; }
+    .stat.s-doc   .stat-value { color: var(--c-green); text-shadow: 0 0 14px rgba(38,217,127,.3); }
+
+    /* ── Charts ── */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .chart-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+    }
+    .chart-card-title {
+      font-size: .65rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: .75rem;
+    }
+    .donut-wrap { height: 250px; position: relative; }
+
+    /* breakdown panel */
+    .bk-total-bar {
+      height: 18px;
+      border-radius: 5px;
+      overflow: hidden;
+      display: flex;
+      margin-bottom: .4rem;
+    }
+    .bk-total-base { background: #1a2a45; }
+    .bk-total-dep  { background: var(--neon); opacity: .75; }
+    .bk-total-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: .75rem;
+      margin-bottom: 1rem;
+    }
+    .bk-acts { display: flex; flex-direction: column; gap: .55rem; }
+    .bk-act-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: .72rem;
+      color: var(--text-muted);
+      margin-bottom: .2rem;
+    }
+    .bk-act-bar {
+      height: 6px;
+      border-radius: 3px;
+      background: var(--border);
+      overflow: hidden;
+      display: flex;
+    }
+    .bk-act-base { background: #1a2a45; }
+    .bk-act-dep  { opacity: .7; }
+
+    [hidden] { display: none !important; }
+
+    /* ── Responsive ── */
+    @media (max-width: 800px) {
+      .params-bar { grid-template-columns: 1fr 1fr; }
+      .summary { grid-template-columns: 1fr 1fr; }
+      .stat.s-doc { grid-column: 1 / -1; }
+      .charts-row { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 500px) {
+      body { padding: .75rem; }
+      .app-content { padding: 1rem; border-radius: 14px; }
+      .params-bar { grid-template-columns: 1fr; gap: .85rem; }
+      .summary { grid-template-columns: 1fr; }
+      .stat.s-doc { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <a href="../index.html" class="back-link">&larr; Retour au tableau de bord</a>
+
+  <header>
+    <h1>Simulateur <span class="accent">USIP</span></h1>
+  </header>
+
+  <main class="app-content">
+
+    <!-- ── Paramètres ── -->
+    <p class="section-title">Paramètres</p>
+    <div class="params-bar">
+
+      <div class="param-group">
+        <label>Lits <span style="opacity:.45;font-weight:400">(indicatif)</span></label>
+        <input id="beds" class="inp-param" type="number" min="1" max="200" value="12">
+      </div>
+
+      <div class="param-group">
+        <label>Taux d'occupation — <span class="param-val" id="occ-val">90 %</span></label>
+        <input id="occ-sl" class="slider" type="range" min="0" max="100" step="1" value="90">
+      </div>
+
+      <div class="param-group">
+        <label>Proportion dépassements — <span class="param-val" id="dep-val">20 %</span></label>
+        <input id="dep-sl" class="slider" type="range" min="0" max="100" step="1" value="20">
+      </div>
+
+      <div class="param-group">
+        <label>Médecins</label>
+        <div class="doc-toggle">
+          <button class="doc-btn active" data-n="3">3</button>
+          <button class="doc-btn" data-n="4">4</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Actes ── -->
+    <p class="section-title">Actes CCAM</p>
+    <div class="acts-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Code</th>
+            <th>Libellé</th>
+            <th>Base (€)</th>
+            <th>Avec dép. (€)</th>
+            <th>Actes/jour</th>
+            <th>Mensuel</th>
+            <th>Part CA</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="acts-body"></tbody>
+      </table>
+    </div>
+    <button class="btn-add" id="btn-add" title="Ajouter un acte">+</button>
+
+    <!-- ── Résumé ── -->
+    <div class="summary">
+      <div class="stat s-total">
+        <div class="stat-label">CA mensuel total</div>
+        <div class="stat-value" id="st-total">—</div>
+      </div>
+      <div class="stat s-base">
+        <div class="stat-label">Dont honoraires base</div>
+        <div class="stat-value" id="st-base">—</div>
+      </div>
+      <div class="stat s-dep">
+        <div class="stat-label">Dont dépassements</div>
+        <div class="stat-value" id="st-dep">—</div>
+      </div>
+      <div class="stat s-doc">
+        <div class="stat-label">Part / médecin / mois</div>
+        <div class="stat-value" id="st-doc">—</div>
+      </div>
+    </div>
+
+    <!-- ── Graphiques ── -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-card-title">Répartition du CA par acte</div>
+        <div class="donut-wrap">
+          <canvas id="donut"></canvas>
+        </div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-card-title">Base vs dépassements</div>
+        <div id="bk-panel"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Simulation à titre indicatif — valorisations CCAM 2025/2026</p>
+  </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+// ── Constantes ─────────────────────────────────────────────────────────────
+const JOURS  = 365 / 12;
+const COLORS = ['#4dabff','#ff5e78','#26d97f','#b47aff','#ff9f43','#00d4cc','#ffd93d'];
+const fmtK   = new Intl.NumberFormat('fr-FR', { style:'currency', currency:'EUR', maximumFractionDigits: 0 });
+const fmt2   = new Intl.NumberFormat('fr-FR', { style:'currency', currency:'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+// ── État ───────────────────────────────────────────────────────────────────
+let uid = 6;
+let acts = [
+  { id:1, code:'YYYY015',         label:'Forfait de réanimation niveau A', base:96.00,  dep:150.00, apd:12  },
+  { id:2, code:'DZQM005',         label:'Échocardiographie au lit',        base:108.48, dep:150.00, apd:5   },
+  { id:3, code:'0,8CS + DEQP003', label:'Consultation (80 %) + ECG',       base:34.70,  dep:100.00, apd:5   },
+  { id:4, code:'JDQM001',         label:'Échographie réno-vésicale',       base:52.45,  dep:80.00,  apd:1   },
+  { id:5, code:'GFQM001',         label:'Échographie thoracique',           base:37.05,  dep:70.00,  apd:1.5 },
+];
+let st = { occ: 90, depPct: 20, docs: 3 };
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// ── Calcul ─────────────────────────────────────────────────────────────────
+function compute() {
+  const tauxOcc = st.occ / 100;
+  const depFrac = st.depPct / 100;
+  let totalCA = 0, totalBase = 0, totalDep = 0;
+
+  acts.forEach(a => {
+    const tarif   = a.base + depFrac * Math.max(0, a.dep - a.base);
+    a._sub  = a.apd * tarif * JOURS * tauxOcc;
+    a._base = a.apd * a.base * JOURS * tauxOcc;
+    a._dep  = a._sub - a._base;
+    totalCA   += a._sub;
+    totalBase += a._base;
+    totalDep  += a._dep;
+  });
+
+  acts.forEach(a => { a._share = totalCA > 0 ? a._sub / totalCA * 100 : 0; });
+  return { totalCA, totalBase, totalDep, perDoc: totalCA / Math.max(1, st.docs) };
+}
+
+// ── Table full rebuild ─────────────────────────────────────────────────────
+function renderTable() {
+  const tbody = $('acts-body');
+  tbody.innerHTML = '';
+  acts.forEach((a, idx) => {
+    const c = COLORS[idx % COLORS.length];
+    const tr = document.createElement('tr');
+    tr.dataset.id = a.id;
+    tr.innerHTML = `
+      <td>
+        <span class="color-dot" style="background:${c}"></span>
+        <input class="inp-cell inp-code" type="text" value="${esc(a.code)}" placeholder="Code CCAM">
+      </td>
+      <td><input class="inp-cell inp-label" type="text" value="${esc(a.label)}" placeholder="Libellé"></td>
+      <td class="right cell-muted">
+        <input class="inp-cell inp-num inp-base" type="number" step="0.01" min="0" value="${a.base}">
+      </td>
+      <td class="right">
+        <input class="inp-cell inp-num" type="number" step="0.01" min="0" value="${a.dep}" data-dep>
+      </td>
+      <td class="right">
+        <input class="inp-cell inp-num" type="number" step="0.1" min="0" value="${a.apd}" data-apd>
+      </td>
+      <td class="right cell-subtotal" data-sub>—</td>
+      <td class="right" data-share>—</td>
+      <td class="center"><button class="btn-del" title="Supprimer">×</button></td>
+    `;
+    tbody.appendChild(tr);
+
+    tr.querySelector('.inp-code').addEventListener('input', e => { a.code = e.target.value; });
+    tr.querySelector('.inp-label').addEventListener('input', e => { a.label = e.target.value; });
+    tr.querySelector('.inp-base').addEventListener('input', e => { a.base = parseFloat(e.target.value) || 0; recompute(); });
+    tr.querySelector('[data-dep]').addEventListener('input', e => { a.dep = parseFloat(e.target.value) || 0; recompute(); });
+    tr.querySelector('[data-apd]').addEventListener('input', e => { a.apd = parseFloat(e.target.value) || 0; recompute(); });
+    tr.querySelector('.btn-del').addEventListener('click', () => { acts = acts.filter(x => x.id !== a.id); render(); });
+  });
+}
+
+// ── Mise à jour des cellules calculées seulement (sans perte du focus) ─────
+function updateCells() {
+  acts.forEach((a, idx) => {
+    const c = COLORS[idx % COLORS.length];
+    const row = document.querySelector(`#acts-body tr[data-id="${a.id}"]`);
+    if (!row) return;
+    row.querySelector('[data-sub]').textContent = fmtK.format(a._sub);
+    row.querySelector('[data-share]').textContent = a._share.toFixed(1) + ' %';
+  });
+}
+
+// ── Résumé ─────────────────────────────────────────────────────────────────
+function updateSummary(r) {
+  $('st-total').textContent = fmtK.format(r.totalCA);
+  $('st-base').textContent  = fmtK.format(r.totalBase);
+  $('st-dep').textContent   = fmtK.format(r.totalDep);
+  $('st-doc').textContent   = fmtK.format(r.perDoc);
+}
+
+// ── Donut ──────────────────────────────────────────────────────────────────
+let donut = null;
+
+function initDonut() {
+  donut = new Chart($('donut').getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: [],
+      datasets: [{ data: [], backgroundColor: [], borderColor: '#0b0f1e', borderWidth: 2 }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: { color: '#dce8ff', usePointStyle: true, pointStyle: 'circle', padding: 10, font: { size: 11 } },
+        },
+        tooltip: {
+          backgroundColor: 'rgba(6,8,15,.95)',
+          borderColor: '#4dabff', borderWidth: 1,
+          titleColor: '#4dabff', bodyColor: '#dce8ff',
+          padding: 10,
+          callbacks: {
+            title: items => items[0].label || '—',
+            label: item => {
+              const tot = item.dataset.data.reduce((a, b) => a + b, 0);
+              const pct = tot > 0 ? (item.parsed / tot * 100).toFixed(1) : '0';
+              return `  ${fmtK.format(item.parsed)}  (${pct} %)`;
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+function updateDonut() {
+  donut.data.labels                        = acts.map(a => a.code || '—');
+  donut.data.datasets[0].data             = acts.map(a => Math.max(0, a._sub));
+  donut.data.datasets[0].backgroundColor  = acts.map((_, i) => COLORS[i % COLORS.length]);
+  donut.update();
+}
+
+// ── Panel Base / Dépassements ──────────────────────────────────────────────
+function updateBreakdown(r) {
+  const tot     = r.totalCA;
+  const basePct = tot > 0 ? r.totalBase / tot * 100 : 0;
+  const depPct  = tot > 0 ? r.totalDep  / tot * 100 : 0;
+
+  let html = `
+    <div class="bk-total-bar">
+      <div class="bk-total-base" style="width:${basePct.toFixed(1)}%;transition:width .3s"></div>
+      <div class="bk-total-dep"  style="width:${depPct.toFixed(1)}%;transition:width .3s"></div>
+    </div>
+    <div class="bk-total-labels">
+      <span style="color:var(--text-muted)">Base : ${fmtK.format(r.totalBase)} (${basePct.toFixed(0)} %)</span>
+      <span style="color:var(--neon)">Dépassements : ${fmtK.format(r.totalDep)} (${depPct.toFixed(0)} %)</span>
+    </div>
+    <div class="bk-acts">
+  `;
+
+  acts.forEach((a, idx) => {
+    const c   = COLORS[idx % COLORS.length];
+    const sub = Math.max(0, a._sub);
+    const bW  = sub > 0 ? Math.max(0, a._base) / sub * 100 : 0;
+    const dW  = sub > 0 ? Math.max(0, a._dep)  / sub * 100 : 0;
+    html += `
+      <div>
+        <div class="bk-act-label">
+          <span><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${c};margin-right:.35rem;vertical-align:middle"></span>${esc(a.code || '—')}</span>
+          <span>${fmtK.format(sub)}</span>
+        </div>
+        <div class="bk-act-bar">
+          <div class="bk-act-base" style="width:${bW.toFixed(1)}%"></div>
+          <div class="bk-act-dep"  style="width:${dW.toFixed(1)}%;background:${c}"></div>
+        </div>
+      </div>
+    `;
+  });
+  html += '</div>';
+  $('bk-panel').innerHTML = html;
+}
+
+// ── Cycle principal ────────────────────────────────────────────────────────
+function recompute() {
+  const r = compute();
+  updateCells();
+  updateSummary(r);
+  updateDonut();
+  updateBreakdown(r);
+}
+
+function render() {
+  renderTable();
+  recompute();
+}
+
+// ── Sliders ────────────────────────────────────────────────────────────────
+function trackFill(sl) {
+  const pct = (sl.value - sl.min) / (sl.max - sl.min) * 100;
+  sl.style.background = `linear-gradient(to right, var(--neon) ${pct}%, var(--border) ${pct}%)`;
+}
+
+$('occ-sl').addEventListener('input', () => {
+  st.occ = +$('occ-sl').value;
+  $('occ-val').textContent = st.occ + ' %';
+  trackFill($('occ-sl'));
+  recompute();
+});
+
+$('dep-sl').addEventListener('input', () => {
+  st.depPct = +$('dep-sl').value;
+  $('dep-val').textContent = st.depPct + ' %';
+  trackFill($('dep-sl'));
+  recompute();
+});
+
+document.querySelectorAll('.doc-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    st.docs = +btn.dataset.n;
+    document.querySelectorAll('.doc-btn').forEach(b => b.classList.toggle('active', b === btn));
+    recompute();
+  });
+});
+
+$('btn-add').addEventListener('click', () => {
+  acts.push({ id: uid++, code: '', label: '', base: 0, dep: 0, apd: 0 });
+  render();
+  $('acts-body').lastElementChild?.querySelector('.inp-code')?.focus();
+});
+
+// ── Init ───────────────────────────────────────────────────────────────────
+initDonut();
+trackFill($('occ-sl'));
+trackFill($('dep-sl'));
+render();
+</script>
+</body>
+</html>

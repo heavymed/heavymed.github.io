@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx --yes serve --version)",
+      "Bash(cmd.exe /c \"where node 2>nul\")",
+      "Bash(ls \"/c/Users/Yannis/AppData/Roaming/Claude/local-agent-mode-sessions/skills-plugin/5c99a381-3aec-419a-8150-66d6a8d42442/0596c5fa-61df-4df4-ae94-1a41573d18ab/bin\" 2>&1 | head -20)",
+      "Bash(cmd.exe /c \"where node\")",
+      "Bash(cmd.exe /c \"where python\")",
+      "Bash(cmd.exe /c \"where npx\")",
+      "Bash(cmd.exe /c \"where php rubyw ruby iis\")",
+      "Read(//mingw64/**)",
+      "mcp__Claude_Preview__preview_start",
+      "WebSearch",
+      "Bash(git --version)",
+      "Bash(git config *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ]
+  }
+}

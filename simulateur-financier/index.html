@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulateur d'investissement</title>
+  <link rel="stylesheet" href="../shared/style.css">
+  <style>
+    :root {
+      --neon:        #ff6a00;
+      --bg-0:        #0d0d12;
+      --bg-1:        #15151c;
+      --bg-2:        #1d1d27;
+      --border:      #2a2a36;
+      --text:        #f1f1f5;
+      --text-muted:  #9a9aac;
+      --c-invested:  #4a90e2;
+      --c-pess:      #e05c7a;
+      --c-real:      #ff6a00;
+      --c-opti:      #2ecc71;
+      --c-gold:      #f0a500;
+    }
+
+    /* ── Corps ── */
+    body {
+      background:
+        radial-gradient(1200px 600px at 80% -10%, rgba(255,106,0,.12), transparent 60%),
+        radial-gradient(900px 500px  at -10% 30%, rgba(255,106,0,.06), transparent 60%),
+        var(--bg-0);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .back-link { color: var(--neon); opacity: .85; }
+    .back-link:hover { opacity: 1; text-shadow: 0 0 8px var(--neon); }
+
+    header h1 {
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: -.02em;
+      text-shadow: 0 0 24px rgba(255,106,0,.35);
+    }
+    header h1 .accent { color: var(--neon); text-shadow: 0 0 16px var(--neon); }
+
+    .app-content {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      box-shadow: 0 0 0 1px rgba(255,106,0,.05), 0 20px 60px rgba(0,0,0,.5);
+    }
+
+    /* ── Titres de section ── */
+    .section-title {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: .85rem;
+    }
+
+    /* ── Champs numériques ── */
+    .params-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .field { display: flex; flex-direction: column; gap: .35rem; }
+
+    .field-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+    .field label {
+      font-size: .75rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .input-wrap { position: relative; }
+    .field input[type=number] {
+      width: 100%;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .6rem 2rem .6rem .75rem;
+      color: var(--text);
+      font-size: .95rem;
+      font-family: inherit;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .field input[type=number]:focus {
+      outline: none;
+      border-color: var(--neon);
+      box-shadow: 0 0 0 3px rgba(255,106,0,.18);
+    }
+    .field input[type=number]::-webkit-outer-spin-button,
+    .field input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    .field input[type=number] { -moz-appearance: textfield; }
+    .unit {
+      position: absolute;
+      right: .75rem; top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: .85rem;
+      pointer-events: none;
+    }
+
+    /* ── Sliders ── */
+    .slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 3px;
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+      margin-top: .5rem;
+      /* background injected via JS */
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: var(--neon);
+      cursor: pointer;
+      box-shadow: 0 0 0 3px rgba(255,106,0,.2), 0 0 10px rgba(255,106,0,.4);
+      transition: box-shadow .15s;
+    }
+    .slider::-webkit-slider-thumb:hover {
+      box-shadow: 0 0 0 5px rgba(255,106,0,.25), 0 0 14px rgba(255,106,0,.6);
+    }
+    .slider::-moz-range-thumb {
+      width: 16px; height: 16px;
+      border-radius: 50%; border: none;
+      background: var(--neon);
+      cursor: pointer;
+      box-shadow: 0 0 0 3px rgba(255,106,0,.2);
+    }
+    /* couleurs spécifiques aux scénarios */
+    .slider-pess::-webkit-slider-thumb { background: var(--c-pess); box-shadow: 0 0 0 3px rgba(224,92,122,.2); }
+    .slider-pess::-moz-range-thumb     { background: var(--c-pess); }
+    .slider-opti::-webkit-slider-thumb { background: var(--c-opti); box-shadow: 0 0 0 3px rgba(46,204,113,.2); }
+    .slider-opti::-moz-range-thumb     { background: var(--c-opti); }
+
+    /* ── Grille scénarios ── */
+    .scenarios-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .75rem;
+      margin-bottom: 1.5rem;
+    }
+    .scenario-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .85rem;
+    }
+    .scenario-card .badge {
+      display: inline-block;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: .15rem .5rem;
+      border-radius: 4px;
+      margin-bottom: .6rem;
+    }
+    .scenario-card.pess .badge { background: rgba(224,92,122,.15);  color: var(--c-pess); }
+    .scenario-card.real .badge { background: rgba(255,106,0,.15);   color: var(--c-real); }
+    .scenario-card.opti .badge { background: rgba(46,204,113,.15);  color: var(--c-opti); }
+
+    .scenario-card input[type=number] {
+      border-color: transparent;
+      background: var(--bg-0);
+      border-radius: 6px;
+      padding: .5rem 1.75rem .5rem .6rem;
+      font-size: .95rem;
+    }
+    .scenario-card.pess input[type=number]:focus { border-color: var(--c-pess); box-shadow: 0 0 0 3px rgba(224,92,122,.18); }
+    .scenario-card.real input[type=number]:focus { border-color: var(--c-real); box-shadow: 0 0 0 3px rgba(255,106,0,.18);  }
+    .scenario-card.opti input[type=number]:focus { border-color: var(--c-opti); box-shadow: 0 0 0 3px rgba(46,204,113,.18); }
+
+    /* ── En-tête scénarios + badge liaison ── */
+    .scenarios-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: .85rem;
+    }
+    .scenarios-header .section-title { margin-bottom: 0; }
+    .link-controls { display: flex; align-items: center; gap: .5rem; }
+    .btn-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px; height: 30px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: transparent;
+      cursor: pointer;
+      padding: 0;
+      flex-shrink: 0;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .btn-icon.is-linked {
+      border-color: var(--neon);
+      color: var(--neon);
+      background: rgba(255,106,0,.1);
+    }
+    .btn-icon.is-free { color: var(--text-muted); }
+    .btn-icon.is-free:hover { border-color: var(--neon); color: var(--neon); }
+
+    /* ── Barre d'actions ── */
+    .action-bar {
+      display: flex;
+      gap: .6rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: .85rem;
+      padding: .45rem .9rem;
+      cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+      white-space: nowrap;
+    }
+    .btn:hover { border-color: var(--neon); color: var(--neon); }
+    .btn.share:hover { border-color: #a78bfa; color: #a78bfa; }
+    .btn svg { flex-shrink: 0; }
+    [hidden] { display: none !important; }
+
+    /* ── Stats ── */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .65rem;
+      margin-bottom: 1.5rem;
+    }
+    .stat {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .85rem;
+    }
+    .stat .stat-label {
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--text-muted);
+      margin-bottom: .35rem;
+    }
+    .stat .stat-value { font-size: 1.1rem; font-weight: 700; letter-spacing: -.01em; }
+    .stat.invested .stat-value { color: var(--c-invested); }
+    .stat.pess     .stat-value { color: var(--c-pess); }
+    .stat.real     .stat-value { color: var(--c-real); text-shadow: 0 0 14px rgba(255,106,0,.4); }
+    .stat.opti     .stat-value { color: var(--c-opti); }
+
+    /* ── Bascule graphique / tableau ── */
+    .view-toggle {
+      display: flex;
+      gap: .4rem;
+      margin-bottom: 1rem;
+    }
+    .toggle-btn {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: .85rem;
+      padding: .4rem .9rem;
+      cursor: pointer;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .toggle-btn.active {
+      background: rgba(255,106,0,.12);
+      border-color: var(--neon);
+      color: var(--neon);
+    }
+
+    /* ── Graphique ── */
+    .chart-wrap {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      height: 380px;
+      position: relative;
+    }
+
+    /* ── Tableau de données ── */
+    .table-wrap {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .table-scroll { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .9rem;
+    }
+    thead th {
+      padding: .75rem 1rem;
+      text-align: right;
+      font-size: .7rem;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--text-muted);
+      background: var(--bg-1);
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    thead th:first-child { text-align: left; }
+    tbody tr { border-bottom: 1px solid rgba(255,255,255,.04); }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,.03); }
+    tbody td {
+      padding: .6rem 1rem;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    tbody td:first-child { text-align: left; color: var(--text-muted); }
+    .col-invested { color: var(--c-invested); }
+    .col-pess     { color: var(--c-pess); }
+    .col-real     { color: var(--c-real); }
+    .col-opti     { color: var(--c-opti); }
+
+    /* ── Histogramme intérêts ── */
+    .chart-histo {
+      height: 220px;
+      margin-top: .75rem;
+    }
+    .toggle-btn.gold.active {
+      background: rgba(240,165,0,.12);
+      border-color: var(--c-gold);
+      color: var(--c-gold);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 700px) {
+      body { padding: .75rem; }
+      header { margin-bottom: 1.5rem; }
+      header h1 { font-size: 1.5rem; }
+      .app-content { padding: 1.1rem; border-radius: 14px; }
+
+      .params-grid { grid-template-columns: 1fr; gap: .85rem; }
+
+      .scenarios-grid { grid-template-columns: repeat(3, 1fr); gap: .5rem; }
+      .scenario-card { padding: .65rem; }
+      .scenario-card .badge { font-size: .65rem; }
+
+      .summary { grid-template-columns: repeat(2, 1fr); }
+      .stat.real { grid-column: 1 / -1; }
+
+      .chart-wrap { height: 260px; padding: .6rem; }
+
+      .stat .stat-value { font-size: 1rem; }
+    }
+
+    @media (max-width: 400px) {
+      .scenarios-grid { grid-template-columns: 1fr; }
+      .summary { grid-template-columns: 1fr; }
+      .stat.real { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <a href="../index.html" class="back-link">&larr; Retour au tableau de bord</a>
+
+  <header>
+    <h1>Simulateur d'<span class="accent">investissement</span></h1>
+    <p><em>"Devenez votre propre banque" — NE 2024</em></p>
+  </header>
+
+  <main class="app-content">
+
+    <!-- ── Paramètres communs ── -->
+    <p class="section-title">Paramètres</p>
+    <div class="params-grid">
+
+      <div class="field">
+        <div class="field-header">
+          <label for="initial">Montant initial</label>
+        </div>
+        <div class="input-wrap">
+          <input id="initial" type="number" min="0" max="10000000" step="1000" value="10000">
+          <span class="unit">€</span>
+        </div>
+        <input id="initial-sl" class="slider" type="range" min="0" max="2000000" step="10000" value="10000">
+      </div>
+
+      <div class="field">
+        <div class="field-header">
+          <label for="monthly">Épargne mensuelle</label>
+        </div>
+        <div class="input-wrap">
+          <input id="monthly" type="number" min="0" max="100000" step="50" value="500">
+          <span class="unit">€</span>
+        </div>
+        <input id="monthly-sl" class="slider" type="range" min="0" max="100000" step="1000" value="500">
+      </div>
+
+      <div class="field">
+        <div class="field-header">
+          <label for="years">Durée</label>
+        </div>
+        <div class="input-wrap">
+          <input id="years" type="number" min="1" max="60" step="1" value="20">
+          <span class="unit">ans</span>
+        </div>
+        <input id="years-sl" class="slider" type="range" min="1" max="50" step="1" value="20">
+      </div>
+
+    </div>
+
+    <!-- ── Scénarios de rendement ── -->
+    <div class="scenarios-header">
+      <p class="section-title">Performance annuelle estimée</p>
+      <button id="btn-link-toggle" class="btn-icon is-linked" type="button" title="Cliquer pour délier">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+        </svg>
+      </button>
+    </div>
+    <div class="scenarios-grid">
+
+      <div class="scenario-card pess">
+        <span class="badge">Pessimiste</span>
+        <div class="field">
+          <div class="input-wrap">
+            <input id="rate-p" type="number" step="0.1" min="0" max="30" value="4.9">
+            <span class="unit">%</span>
+          </div>
+          <input id="rate-p-sl" class="slider slider-pess" type="range" min="0" max="20" step="0.1" value="4">
+        </div>
+      </div>
+
+      <div class="scenario-card real">
+        <span class="badge">Réaliste</span>
+        <div class="field">
+          <div class="input-wrap">
+            <input id="rate-r" type="number" step="0.1" min="0" max="30" value="7">
+            <span class="unit">%</span>
+          </div>
+          <input id="rate-r-sl" class="slider" type="range" min="0" max="20" step="0.1" value="7">
+        </div>
+      </div>
+
+      <div class="scenario-card opti">
+        <span class="badge">Optimiste</span>
+        <div class="field">
+          <div class="input-wrap">
+            <input id="rate-o" type="number" step="0.1" min="0" max="30" value="9.1">
+            <span class="unit">%</span>
+          </div>
+          <input id="rate-o-sl" class="slider slider-opti" type="range" min="0" max="20" step="0.1" value="10">
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── Actions ── -->
+    <div class="action-bar">
+      <button class="btn" id="btn-reset" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        Réinitialiser
+      </button>
+      <button class="btn share" id="btn-share" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        Partager ce scénario
+      </button>
+    </div>
+
+    <!-- ── Résumé ── -->
+    <div class="summary">
+      <div class="stat invested">
+        <div class="stat-label">Total investi</div>
+        <div class="stat-value" id="stat-inv">—</div>
+      </div>
+      <div class="stat pess">
+        <div class="stat-label">Pessimiste</div>
+        <div class="stat-value" id="stat-p">—</div>
+      </div>
+      <div class="stat real">
+        <div class="stat-label">Réaliste</div>
+        <div class="stat-value" id="stat-r">—</div>
+      </div>
+      <div class="stat opti">
+        <div class="stat-label">Optimiste</div>
+        <div class="stat-value" id="stat-o">—</div>
+      </div>
+    </div>
+
+    <!-- ── Bascule vue ── -->
+    <div class="view-toggle">
+      <button class="toggle-btn active" id="btn-v-chart" onclick="showView('chart')">📊 Graphique</button>
+      <button class="toggle-btn"        id="btn-v-table" onclick="showView('table')">📋 Tableau</button>
+      <span style="flex:1"></span>
+      <button class="toggle-btn gold" id="btn-v-histo" onclick="toggleHisto()">📈 Intérêts annuels</button>
+    </div>
+
+    <!-- ── Graphique ── -->
+    <div id="view-chart" class="chart-wrap">
+      <canvas id="chart"></canvas>
+    </div>
+
+    <!-- ── Tableau ── -->
+    <div id="view-table" class="table-wrap" hidden>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Année</th>
+              <th class="col-invested">Total investi</th>
+              <th class="col-pess">Pessimiste</th>
+              <th class="col-real">Réaliste</th>
+              <th class="col-opti">Optimiste</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ── Histogramme intérêts annuels ── -->
+    <div id="view-histo" class="chart-wrap chart-histo" hidden>
+      <canvas id="histo-chart"></canvas>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>Les performances passées ne préjugent pas des performances futures</p>
+  </footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  // ── Utilitaires ──────────────────────────────────────────────────────────
+  const $ = id => document.getElementById(id);
+
+  const fmt = new Intl.NumberFormat('fr-FR', {
+    style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
+  });
+
+  // Valeurs par défaut
+  const DEFAULTS = {
+    initial: 0, monthly: 0, years: 0,
+    'rate-p': 0, 'rate-r': 0, 'rate-o': 0,
+  };
+
+  // Couleurs des tracks de sliders
+  const TRACK_COLORS = {
+    'initial-sl': 'var(--c-real)',
+    'monthly-sl': 'var(--c-real)',
+    'years-sl':   'var(--c-real)',
+    'rate-p-sl':  'var(--c-pess)',
+    'rate-r-sl':  'var(--c-real)',
+    'rate-o-sl':  'var(--c-opti)',
+  };
+
+  function updateTrack(sl) {
+    const color = TRACK_COLORS[sl.id] || 'var(--c-real)';
+    const min = parseFloat(sl.min) || 0;
+    const max = parseFloat(sl.max) || 100;
+    const pct = Math.max(0, Math.min(100,
+      ((parseFloat(sl.value) - min) / (max - min)) * 100));
+    sl.style.background =
+      `linear-gradient(to right, ${color} ${pct}%, var(--border) ${pct}%)`;
+  }
+
+  // ── Calcul ───────────────────────────────────────────────────────────────
+  function project({ initial, monthly, annualRate, years }) {
+    const r = Math.pow(1 + annualRate, 1 / 12) - 1;
+    const labels = [0], portfolio = [initial], invested = [initial];
+    let val = initial, tot = initial;
+    for (let m = 1; m <= years * 12; m++) {
+      val = (val + monthly) * (1 + r);
+      tot += monthly;
+      if (m % 12 === 0) {
+        labels.push(m / 12);
+        portfolio.push(val);
+        invested.push(tot);
+      }
+    }
+    return { labels, portfolio, invested };
+  }
+
+  // ── Graphique ────────────────────────────────────────────────────────────
+  const ctx = $('chart').getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 0, 380);
+  grad.addColorStop(0, 'rgba(255,106,0,.40)');
+  grad.addColorStop(1, 'rgba(255,106,0,0)');
+
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: [],
+      datasets: [
+        { // 0 — investi
+          label: 'Total investi',
+          data: [],
+          borderColor: '#4a90e2',
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          pointRadius: 0, pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#4a90e2',
+          pointHoverBorderColor: '#fff', pointHoverBorderWidth: 2,
+          fill: false, tension: .2, order: 4,
+        },
+        { // 1 — pessimiste
+          label: 'Pessimiste',
+          data: [],
+          borderColor: '#e05c7a',
+          backgroundColor: 'transparent',
+          borderWidth: 1.5,
+          pointRadius: 0, pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#e05c7a',
+          pointHoverBorderColor: '#fff', pointHoverBorderWidth: 2,
+          fill: false, tension: .2, order: 3,
+        },
+        { // 2 — réaliste (fill)
+          label: 'Réaliste',
+          data: [],
+          borderColor: '#ff6a00',
+          backgroundColor: grad,
+          borderWidth: 2.5,
+          pointRadius: 0, pointHoverRadius: 6,
+          pointHoverBackgroundColor: '#ff6a00',
+          pointHoverBorderColor: '#fff', pointHoverBorderWidth: 2,
+          fill: true, tension: .2, order: 2,
+        },
+        { // 3 — optimiste
+          label: 'Optimiste',
+          data: [],
+          borderColor: '#2ecc71',
+          backgroundColor: 'transparent',
+          borderWidth: 1.5,
+          pointRadius: 0, pointHoverRadius: 5,
+          pointHoverBackgroundColor: '#2ecc71',
+          pointHoverBorderColor: '#fff', pointHoverBorderWidth: 2,
+          fill: false, tension: .2, order: 1,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#f1f1f5',
+            usePointStyle: true, pointStyle: 'line',
+            padding: 16, font: { size: 12 },
+          },
+        },
+        tooltip: {
+          backgroundColor: 'rgba(13,13,18,.95)',
+          borderColor: '#ff6a00', borderWidth: 1,
+          titleColor: '#ff6a00',
+          bodyColor: '#f1f1f5',
+          padding: 12, displayColors: true, boxPadding: 4,
+          callbacks: {
+            title: items => `Année ${items[0].label}`,
+            label: item => ` ${item.dataset.label} : ${fmt.format(item.parsed.y)}`,
+          },
+        },
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Années', color: '#9a9aac' },
+          grid: { color: 'rgba(255,255,255,.04)' },
+          ticks: { color: '#9a9aac' },
+        },
+        y: {
+          title: { display: true, text: 'Valeur (€)', color: '#9a9aac' },
+          grid: { color: 'rgba(255,255,255,.06)' },
+          ticks: { color: '#9a9aac', callback: v => fmt.format(v) },
+        },
+      },
+    },
+  });
+
+  // ── Histogramme intérêts ────────────────────────────────────────────────
+  const histoCtx = $('histo-chart').getContext('2d');
+  const histoChart = new Chart(histoCtx, {
+    type: 'bar',
+    data: {
+      labels: [],
+      datasets: [{
+        label: 'Intérêts générés (scénario réaliste)',
+        data: [],
+        backgroundColor: 'rgba(240,165,0,.70)',
+        borderColor: '#f0a500',
+        borderWidth: 1,
+        borderRadius: 4,
+        borderSkipped: false,
+      }],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(13,13,18,.95)',
+          borderColor: '#f0a500', borderWidth: 1,
+          titleColor: '#f0a500', bodyColor: '#f1f1f5',
+          padding: 12,
+          callbacks: {
+            title: items => `Année ${items[0].label}`,
+            label: item => ` Intérêts : ${fmt.format(item.parsed.y)}`,
+            afterLabel: item => ` Soit ${fmt.format(Math.round(item.parsed.y / 12))}/mois`,
+          },
+        },
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Années', color: '#9a9aac' },
+          grid: { color: 'rgba(255,255,255,.04)' },
+          ticks: { color: '#9a9aac' },
+        },
+        y: {
+          title: { display: true, text: 'Intérêts (€)', color: '#9a9aac' },
+          grid: { color: 'rgba(255,255,255,.06)' },
+          ticks: { color: '#9a9aac', callback: v => fmt.format(v) },
+        },
+      },
+    },
+  });
+
+  function computeInterests(portfolio, monthly) {
+    const result = [];
+    for (let i = 1; i < portfolio.length; i++) {
+      result.push(Math.max(0, Math.round(portfolio[i] - portfolio[i - 1] - monthly * 12)));
+    }
+    return result;
+  }
+
+  // ── Tableau ──────────────────────────────────────────────────────────────
+  function buildTable(labels, invested, pess, real, opti) {
+    const tbody = $('table-body');
+    tbody.innerHTML = '';
+    labels.forEach((yr, i) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        `<td>${yr}</td>` +
+        `<td class="col-invested">${fmt.format(invested[i])}</td>` +
+        `<td class="col-pess">${fmt.format(pess[i])}</td>` +
+        `<td class="col-real">${fmt.format(real[i])}</td>` +
+        `<td class="col-opti">${fmt.format(opti[i])}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ── Recalcul principal ───────────────────────────────────────────────────
+  function recompute() {
+    const initial = Math.max(0, parseFloat($('initial').value) || 0);
+    const monthly = Math.max(0, parseFloat($('monthly').value) || 0);
+    const years   = Math.min(60, Math.max(1, parseInt($('years').value)   || 1));
+    const rP = (parseFloat($('rate-p').value) || 0) / 100;
+    const rR = (parseFloat($('rate-r').value) || 0) / 100;
+    const rO = (parseFloat($('rate-o').value) || 0) / 100;
+
+    const P = project({ initial, monthly, annualRate: rP, years });
+    const R = project({ initial, monthly, annualRate: rR, years });
+    const O = project({ initial, monthly, annualRate: rO, years });
+
+    // Graphique
+    chart.data.labels            = R.labels;
+    chart.data.datasets[0].data  = R.invested;
+    chart.data.datasets[1].data  = P.portfolio;
+    chart.data.datasets[2].data  = R.portfolio;
+    chart.data.datasets[3].data  = O.portfolio;
+    chart.update();
+
+    // Stats
+    const last = arr => arr[arr.length - 1];
+    $('stat-inv').textContent = fmt.format(last(R.invested));
+    $('stat-p').textContent   = fmt.format(last(P.portfolio));
+    $('stat-r').textContent   = fmt.format(last(R.portfolio));
+    $('stat-o').textContent   = fmt.format(last(O.portfolio));
+
+    // Tableau
+    buildTable(R.labels, R.invested, P.portfolio, R.portfolio, O.portfolio);
+
+    // Histogramme
+    const interests = computeInterests(R.portfolio, monthly);
+    histoChart.data.labels           = R.labels.slice(1);
+    histoChart.data.datasets[0].data = interests;
+    histoChart.update();
+  }
+
+  // ── Synchro slider ↔ input ───────────────────────────────────────────────
+  const PAIRS = [
+    ['initial', 'initial-sl'],
+    ['monthly', 'monthly-sl'],
+    ['years',   'years-sl'],
+    ['rate-p',  'rate-p-sl'],
+    ['rate-r',  'rate-r-sl'],
+    ['rate-o',  'rate-o-sl'],
+  ];
+
+  // Synchro standard (paramètres communs)
+  PAIRS.slice(0, 3).forEach(([inId, slId]) => {
+    const inp = $(inId), sl = $(slId);
+    inp.addEventListener('input', () => { sl.value = inp.value; updateTrack(sl); recompute(); });
+    sl.addEventListener('input',  () => { inp.value = sl.value; updateTrack(sl); recompute(); });
+  });
+
+  // ── Liaison scénarios ±30 % ──────────────────────────────────────────────
+  let linked  = true;   // état de la liaison
+  let _prog   = false;  // flag interne : mise à jour programmatique (non manuelle)
+
+  function setLinked(val) {
+    linked = val;
+    const btn = $('btn-link-toggle');
+    btn.className = 'btn-icon ' + (val ? 'is-linked' : 'is-free');
+    btn.title     = val ? 'Cliquer pour délier' : 'Cliquer pour lier';
+  }
+
+  function applyLink(rVal) {
+    _prog = true;
+    const p = Math.round(rVal * 0.70 * 10) / 10;
+    const o = Math.round(rVal * 1.30 * 10) / 10;
+    $('rate-p').value    = p;  $('rate-p-sl').value = p;  updateTrack($('rate-p-sl'));
+    $('rate-o').value    = o;  $('rate-o-sl').value = o;  updateTrack($('rate-o-sl'));
+    _prog = false;
+  }
+
+  // Réaliste → entraîne les liés
+  const inpR = $('rate-r'), slR = $('rate-r-sl');
+  inpR.addEventListener('input', () => {
+    slR.value = inpR.value; updateTrack(slR);
+    if (linked) applyLink(parseFloat(inpR.value) || 0);
+    recompute();
+  });
+  slR.addEventListener('input', () => {
+    inpR.value = slR.value; updateTrack(slR);
+    if (linked) applyLink(parseFloat(slR.value) || 0);
+    recompute();
+  });
+
+  // Pessimiste → délie si modification manuelle
+  const inpP = $('rate-p'), slP = $('rate-p-sl');
+  inpP.addEventListener('input', () => { if (!_prog) setLinked(false); slP.value = inpP.value; updateTrack(slP); recompute(); });
+  slP.addEventListener('input',  () => { if (!_prog) setLinked(false); inpP.value = slP.value; updateTrack(slP); recompute(); });
+
+  // Optimiste → délie si modification manuelle
+  const inpO = $('rate-o'), slO = $('rate-o-sl');
+  inpO.addEventListener('input', () => { if (!_prog) setLinked(false); slO.value = inpO.value; updateTrack(slO); recompute(); });
+  slO.addEventListener('input',  () => { if (!_prog) setLinked(false); inpO.value = slO.value; updateTrack(slO); recompute(); });
+
+  // ── Réinitialiser ────────────────────────────────────────────────────────
+  function reset() {
+    ['initial','monthly','years'].forEach(id => {
+      $(id).value = DEFAULTS[id];
+      const sl = $(id + '-sl');
+      if (sl) { sl.value = DEFAULTS[id]; updateTrack(sl); }
+    });
+    // Taux remis à zéro
+    $('rate-r').value = 0; $('rate-r-sl').value = 0; updateTrack($('rate-r-sl'));
+    setLinked(true);
+    applyLink(0);
+    history.replaceState(null, '', location.pathname);
+    recompute();
+  }
+  $('btn-reset').addEventListener('click', reset);
+
+  // ── Partage par lien ─────────────────────────────────────────────────────
+  function share() {
+    const params = new URLSearchParams({
+      i: $('initial').value,
+      m: $('monthly').value,
+      d: $('years').value,
+      p: $('rate-p').value,
+      r: $('rate-r').value,
+      o: $('rate-o').value,
+    });
+    const url = `${location.href.split('?')[0]}?${params}`;
+    const btn = $('btn-share');
+    const orig = btn.innerHTML;
+
+    navigator.clipboard.writeText(url).then(() => {
+      btn.innerHTML =
+        `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>` +
+        ` Lien copié !`;
+      btn.style.borderColor = '#a78bfa';
+      btn.style.color = '#a78bfa';
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.style.borderColor = '';
+        btn.style.color = '';
+      }, 2500);
+    }).catch(() => {
+      // fallback si clipboard non disponible (http://)
+      prompt('Copiez ce lien :', url);
+    });
+  }
+  $('btn-share').addEventListener('click', share);
+
+  // ── Bascule graphique / tableau ──────────────────────────────────────────
+  function showView(view) {
+    const isChart = view === 'chart';
+    $('view-chart').hidden = !isChart;
+    $('view-table').hidden =  isChart;
+    $('btn-v-chart').classList.toggle('active',  isChart);
+    $('btn-v-table').classList.toggle('active', !isChart);
+  }
+
+  function toggleHisto() {
+    const histo = $('view-histo');
+    const btn   = $('btn-v-histo');
+    histo.hidden = !histo.hidden;
+    btn.classList.toggle('active', !histo.hidden);
+    if (!histo.hidden) histoChart.resize();
+  }
+
+  // ── Chargement depuis URL ────────────────────────────────────────────────
+  function loadFromURL() {
+    const p = new URLSearchParams(location.search);
+    const map = { i:'initial', m:'monthly', d:'years', p:'rate-p', r:'rate-r', o:'rate-o' };
+    let found = false;
+    for (const [key, id] of Object.entries(map)) {
+      if (p.has(key)) { $(id).value = p.get(key); found = true; }
+    }
+    if (found) {
+      PAIRS.forEach(([inId, slId]) => { $(slId).value = $(inId).value; updateTrack($(slId)); });
+      // Si les valeurs chargées ne respectent plus le ratio ±30 %, déconnecter la liaison
+      const r  = parseFloat($('rate-r').value) || 0;
+      const pv = parseFloat($('rate-p').value) || 0;
+      const ov = parseFloat($('rate-o').value) || 0;
+      if (Math.abs(pv - r * 0.70) > 0.15 || Math.abs(ov - r * 1.30) > 0.15) setLinked(false);
+    }
+  }
+
+  // ── Init ─────────────────────────────────────────────────────────────────
+  $('btn-link-toggle').addEventListener('click', () => {
+    if (linked) {
+      setLinked(false);
+    } else {
+      setLinked(true);
+      applyLink(parseFloat($('rate-r').value) || 0);
+      recompute();
+    }
+  });
+
+  PAIRS.forEach(([, slId]) => updateTrack($(slId)));
+  setLinked(true);
+  $('view-histo').hidden = true;
+  $('btn-v-histo').classList.remove('active');
+  loadFromURL();
+  recompute();
+  chart.hide(1); // Pessimiste masquée par défaut
+  chart.hide(3); // Optimiste masquée par défaut
+</script>
+</body>
+</html>
