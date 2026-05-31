@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulateur USIP</title>
+  <title>Simulateur USC</title>
   <link rel="stylesheet" href="../shared/style.css">
   <style>
     /* ── Thème bleu marine néon ── */
@@ -39,9 +39,9 @@
       color: var(--text);
       font-weight: 700;
       letter-spacing: -.02em;
-      text-shadow: 0 0 24px rgba(77,171,255,.35);
+      text-shadow: 0 0 12px rgba(77,171,255,.18);
     }
-    header h1 .accent { color: var(--neon); text-shadow: 0 0 16px var(--neon); }
+    header h1 .accent { color: var(--neon); text-shadow: 0 0 10px rgba(77,171,255,.3); }
 
     .app-content {
       background: var(--bg-1);
@@ -145,6 +145,18 @@
 
     /* ── Table ── */
     .acts-wrap { overflow-x: auto; margin-bottom: .75rem; }
+
+    /* ── Scrollbar stylisée (webkit + firefox) ── */
+    .acts-wrap { scrollbar-width: thin; scrollbar-color: rgba(77,171,255,.35) var(--bg-2); }
+    .acts-wrap::-webkit-scrollbar { height: 5px; }
+    .acts-wrap::-webkit-scrollbar-track {
+      background: var(--bg-2); border-radius: 0 0 10px 10px;
+    }
+    .acts-wrap::-webkit-scrollbar-thumb {
+      background: rgba(77,171,255,.35); border-radius: 10px;
+    }
+    .acts-wrap::-webkit-scrollbar-thumb:hover { background: rgba(77,171,255,.65); }
+    .acts-wrap::-webkit-scrollbar-button { display: none; }
     table { width: 100%; border-collapse: collapse; font-size: .875rem; white-space: nowrap; }
 
     thead th {
@@ -351,6 +363,15 @@
 
     [hidden] { display: none !important; }
 
+    /* ── Disclaimer footer ── */
+    .disclaimer {
+      margin-top: 2rem; padding: .85rem 1.1rem; border: 1px solid var(--border);
+      border-radius: 12px; color: var(--text-muted); font-size: .78rem; line-height: 1.5;
+      display: flex; align-items: center; justify-content: center; text-align: center; gap: .6rem;
+    }
+    .disclaimer svg { flex-shrink: 0; color: var(--c-orange); }
+    footer > p { margin-top: .8rem; color: var(--text-muted); font-size: .78rem; text-align: center; }
+
     /* ── Responsive ── */
     @media (max-width: 800px) {
       .params-bar { grid-template-columns: 1fr 1fr; }
@@ -373,7 +394,7 @@
   <a href="../index.html" class="back-link">&larr; Retour au tableau de bord</a>
 
   <header>
-    <h1>Simulateur <span class="accent">USIP</span></h1>
+    <h1>Simulateur <span class="accent">USC</span></h1>
   </header>
 
   <main class="app-content">
@@ -471,7 +492,14 @@
   </main>
 
   <footer>
-    <p>Simulation à titre indicatif — valorisations CCAM 2025/2026</p>
+    <div class="disclaimer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <span>Simulation à titre indicatif — valorisations CCAM 2025/2026. Les chiffres obtenus ne constituent pas une garantie de revenus.</span>
+    </div>
+    <p>USC · HeavyMed Apps · &copy; 2026</p>
   </footer>
 
 </div>

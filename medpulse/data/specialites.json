@@ -1,0 +1,5 @@
+{
+  "specialites": [
+    { "id": "cardiologie", "nom": "Cardiologie", "fichier": "cardiologie.json", "actif": true }
+  ]
+}

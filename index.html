@@ -15,6 +15,7 @@
       --text-muted: #6b9a7e;
       --c-orange:   #ff6a00;
       --c-blue:     #4dabff;
+      --c-red:      #ff4d6d;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -116,13 +117,21 @@
     .app-card.orange .category { color: var(--c-orange); }
     .app-card.orange h2 { text-shadow: 0 0 16px rgba(255,255,255,.12); }
 
-    /* bleu — USIP */
+    /* bleu — USC */
     .app-card.blue { border-color: rgba(77,171,255,.35); }
     .app-card.blue:hover { border-color: rgba(77,171,255,.5); box-shadow: 0 8px 32px rgba(77,171,255,.12); }
     .app-card.blue::after { background: var(--c-blue); box-shadow: 0 0 12px var(--c-blue); }
     .app-card.blue .card-icon { background: rgba(77,171,255,.12); color: var(--c-blue); }
     .app-card.blue .category { color: var(--c-blue); }
     .app-card.blue h2 { text-shadow: 0 0 16px rgba(255,255,255,.12); }
+
+    /* rouge — MedPulse */
+    .app-card.red { border-color: rgba(255,77,109,.35); }
+    .app-card.red:hover { border-color: rgba(255,77,109,.5); box-shadow: 0 8px 32px rgba(255,77,109,.12); }
+    .app-card.red::after { background: var(--c-red); box-shadow: 0 0 12px var(--c-red); }
+    .app-card.red .card-icon { background: rgba(255,77,109,.12); color: var(--c-red); }
+    .app-card.red .category { color: var(--c-red); }
+    .app-card.red h2 { text-shadow: 0 0 16px rgba(255,255,255,.12); }
 
     /* contenu carte */
     .card-icon {
@@ -184,6 +193,31 @@
 
     <main class="apps-grid">
 
+      <a href="medpulse/index.html" class="app-card red">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 12h4l2 5 4-12 2 7h6"/>
+          </svg>
+        </div>
+        <span class="category">Veille / actualités</span>
+        <h2>MedPulse</h2>
+        <p>Veille médicale : dernières études et mises au point par spécialité, mises à jour chaque semaine</p>
+      </a>
+
+      <a href="usip-simulateur/index.html" class="app-card blue">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <polyline points="7 13 9.5 9 12.5 15 15 11 17 13"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <span class="category">Activité médicale</span>
+        <h2>Simulateur USC</h2>
+        <p>Projection de chiffre d'affaires CCAM pour une unité de surveillance continue</p>
+      </a>
+
       <a href="simulateur-financier/index.html" class="app-card orange">
         <div class="card-icon">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -194,17 +228,6 @@
         <span class="category">Financier</span>
         <h2>Simulateur d'investissement</h2>
         <p>Projection à intérêts composés, multi-scénarios, histogramme des intérêts annuels</p>
-      </a>
-
-      <a href="usip-simulateur/index.html" class="app-card blue">
-        <div class="card-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-          </svg>
-        </div>
-        <span class="category">Activité médicale</span>
-        <h2>Simulateur USIP</h2>
-        <p>Projection de chiffre d'affaires CCAM pour une unité de soins intensifs polyvalents</p>
       </a>
 
       <!--

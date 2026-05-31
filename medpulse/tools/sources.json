@@ -1,0 +1,49 @@
+{
+  "_comment": "Configuration des sources MedPulse. Modifiable sans toucher au script fetch.mjs.",
+
+  "fenetre_jours": 10,
+
+  "pubmed": {
+    "_comment": "Noms de revues au format 'NLM Title Abbreviation' utilisé par PubMed dans le champ [TA].",
+
+    "revues_cardio": [
+      "Circulation",
+      "Eur Heart J",
+      "J Am Coll Cardiol",
+      "JACC Cardiovasc Imaging",
+      "JACC CardioOncol",
+      "JACC Heart Fail",
+      "JACC Cardiovasc Interv",
+      "Nat Rev Cardiol"
+    ],
+
+    "revues_generalistes": [
+      "N Engl J Med",
+      "Lancet",
+      "JAMA",
+      "BMJ",
+      "Nat Med"
+    ],
+
+    "filtre_cardio_generalistes": "(cardiac OR cardiovascular OR heart OR coronary OR myocardial OR arrhythmia OR \"atrial fibrillation\" OR \"heart failure\" OR hypertension OR valvular OR \"acute coronary syndrome\")",
+
+    "inclure_meta_analyses_cardio": true,
+    "_comment_meta": "Les méta-analyses sont restreintes à la whitelist + Cochrane (pas de recherche tous-journaux).",
+    "revues_meta_analyses_extra": [
+      "Cochrane Database Syst Rev"
+    ]
+  },
+
+  "rss": [
+    {
+      "nom": "Cardiologie Pratique — À la Une",
+      "url": "https://www.cardiologie-pratique.com/journal/feed.xml",
+      "role": "synthese"
+    },
+    {
+      "nom": "Cardiologie Pratique — Actualités",
+      "url": "https://www.cardiologie-pratique.com/actualites/feed.xml",
+      "role": "radar"
+    }
+  ]
+}

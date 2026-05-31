@@ -38,9 +38,9 @@
       color: var(--text);
       font-weight: 700;
       letter-spacing: -.02em;
-      text-shadow: 0 0 24px rgba(255,106,0,.35);
+      text-shadow: 0 0 12px rgba(255,106,0,.18);
     }
-    header h1 .accent { color: var(--neon); text-shadow: 0 0 16px var(--neon); }
+    header h1 .accent { color: var(--neon); text-shadow: 0 0 10px rgba(255,106,0,.3); }
 
     .app-content {
       background: var(--bg-1);
@@ -309,6 +309,18 @@
       overflow: hidden;
     }
     .table-scroll { overflow-x: auto; }
+
+    /* ── Scrollbar stylisée (webkit + firefox) ── */
+    .table-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,106,0,.35) var(--bg-2); }
+    .table-scroll::-webkit-scrollbar { height: 5px; }
+    .table-scroll::-webkit-scrollbar-track {
+      background: var(--bg-2); border-radius: 0 0 10px 10px;
+    }
+    .table-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255,106,0,.35); border-radius: 10px;
+    }
+    .table-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255,106,0,.65); }
+    .table-scroll::-webkit-scrollbar-button { display: none; }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -350,6 +362,15 @@
       border-color: var(--c-gold);
       color: var(--c-gold);
     }
+
+    /* ── Disclaimer footer ── */
+    .disclaimer {
+      margin-top: 2rem; padding: .85rem 1.1rem; border: 1px solid var(--border);
+      border-radius: 12px; color: var(--text-muted); font-size: .78rem; line-height: 1.5;
+      display: flex; align-items: center; justify-content: center; text-align: center; gap: .6rem;
+    }
+    .disclaimer svg { flex-shrink: 0; color: var(--c-gold); }
+    footer > p { margin-top: .8rem; color: var(--text-muted); font-size: .78rem; text-align: center; }
 
     /* ── Responsive ── */
     @media (max-width: 700px) {
@@ -548,7 +569,14 @@
   </main>
 
   <footer>
-    <p>Les performances passées ne préjugent pas des performances futures</p>
+    <div class="disclaimer">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <span>Les performances passées ne préjugent pas des performances futures. Simulation à titre indicatif uniquement.</span>
+    </div>
+    <p>Investissement · HeavyMed Apps · &copy; 2026</p>
   </footer>
 
 </div>
