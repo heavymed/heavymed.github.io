@@ -13,6 +13,102 @@
   ],
   "etudes": [
     {
+      "id": "pubmed-41911017",
+      "titre": "IVUS-Guided versus Angiography-Guided PCI in Unprotected Left Main Coronary Disease",
+      "breve": "Essai international multicentrique randomisé (806 patients) comparant l'angioplastie du tronc commun gauche non protégé guidée par échographie endocoronaire (IVUS) à un guidage angiographique seul. À 2,9 ans de suivi médian, le critère composite (décès toutes causes, infarctus, AVC, revascularisation) survenait chez 33,7 % des patients du groupe IVUS contre 30,9 % du groupe angiographie (HR 1,11 ; p=0,40), sans différence de sécurité. Contrairement à l'orientation des recommandations qui privilégient l'imagerie intracoronaire dans les lésions complexes, l'IVUS systématique n'apporte ici aucun bénéfice clinique dans le tronc commun.",
+      "type": "etude",
+      "sous_theme": "Coronaire",
+      "journal": "New England Journal of Medicine",
+      "date": "2026-06-11",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/41911017/",
+      "marquant": true
+    },
+    {
+      "id": "pubmed-41911016",
+      "titre": "Intravascular Ultrasound-Guided or Angiography-Guided Complex High-Risk PCI",
+      "breve": "Essai international randomisé (2 020 patients) évaluant l'angioplastie complexe à haut risque guidée par IVUS, avec critères prédéfinis d'optimisation du stent, versus guidage angiographique. À 19 mois, l'échec du vaisseau cible (décès cardiaque, infarctus du vaisseau cible, revascularisation) survenait chez 13,9 % des patients sous IVUS contre 11,1 % sous angiographie (HR 1,25 ; IC 95 % 0,97–1,60 ; p=0,08), sans bénéfice malgré une procédure plus longue (89 vs 66 min). Avec l'essai sur le tronc commun publié simultanément, ces données remettent en question l'IVUS systématique dans la PCI complexe en pratique occidentale.",
+      "type": "etude",
+      "sous_theme": "Coronaire",
+      "journal": "New England Journal of Medicine",
+      "date": "2026-06-11",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/41911016/",
+      "marquant": true
+    },
+    {
+      "id": "pubmed-42273960",
+      "titre": "Sodium Bicarbonate for In-Hospital Cardiac Arrest: A Randomized Clinical Trial",
+      "breve": "Essai randomisé danois en double aveugle (21 hôpitaux, 779 patients) testant le bicarbonate de sodium (jusqu'à 100 mmol) contre placebo lors d'un arrêt cardiaque intra-hospitalier, après au moins une dose d'adrénaline. La reprise d'une circulation spontanée durable était identique (39 % vs 37 % ; RR 1,05 ; p=0,62), sans bénéfice sur la survie à 30 jours (12 % vs 9,1 %, non significatif) ni sur le pronostic neurologique. Le bicarbonate augmentait en revanche l'alcalose et l'hypernatrémie. Ces résultats n'appuient pas l'administration systématique de bicarbonate, pourtant fréquente, au cours de l'arrêt cardiaque.",
+      "type": "etude",
+      "sous_theme": "Autres",
+      "journal": "JAMA",
+      "date": "2026-06-11",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42273960/",
+      "marquant": true
+    },
+    {
+      "id": "pubmed-42267437",
+      "titre": "Heart Rate and Cardiovascular Outcomes in Post-Myocardial Infarction Patients Treated by β-Blockers: A Secondary Analysis of the ABYSS Trial",
+      "breve": "Analyse secondaire préspécifiée de l'essai ABYSS (3 698 patients stabilisés après infarctus, FEVG ≥40 %, randomisés entre poursuite et arrêt des β-bloquants), examinant le rôle de la fréquence cardiaque (FC). La FC de base n'était pas associée au critère primaire composite, mais une FC élevée (≥68 bpm) s'associait à un surrisque de décès, infarctus ou AVC (HR ajusté 1,55) et de mortalité globale. L'arrêt des β-bloquants augmentait la FC de 10–13 bpm, et son association à un pronostic défavorable était indépendante de la FC initiale. Suggère que la FC reste un marqueur pronostique post-infarctus à l'ère de la reperfusion.",
+      "type": "etude",
+      "sous_theme": "Coronaire",
+      "journal": "Circulation",
+      "date": "2026-06-10",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42267437/",
+      "marquant": false
+    },
+    {
+      "id": "pubmed-42100816",
+      "titre": "Determining the Physiological Threshold for Angina (ORBITA-FIRE): A Double-Blind, Randomized, Placebo-Controlled Study",
+      "breve": "Étude multicentrique en double aveugle contrôlée contre placebo (ORBITA-FIRE, 65 patients en angor stable monotronculaire) cherchant à définir le seuil physiologique de déclenchement de l'angor. Après angioplastie, un ballon intra-stent était gonflé progressivement jusqu'à reproduire l'angor : la FFR correspondante était de 0,29 au repos, montant à 0,45 à l'effort intense — bien en deçà du seuil diagnostique habituel de 0,80. Première démonstration que le seuil ischémique symptomatique est très inférieur aux valeurs utilisées pour guider la revascularisation, et qu'il dépend du niveau d'effort.",
+      "type": "etude",
+      "sous_theme": "Coronaire",
+      "journal": "Circulation",
+      "date": "2026-06-09",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42100816/",
+      "marquant": false
+    },
+    {
+      "id": "pubmed-42113540",
+      "titre": "Predictors of Long-Term Outcomes in Hypertrophic Cardiomyopathy: The NHLBI HCM Registry",
+      "breve": "Registre prospectif international (HCM Registry du NHLBI, 2 750 patients suivis 6,9 ans en moyenne) combinant données cliniques, IRM de rehaussement tardif (LGE), génétique et biomarqueurs pour affiner la prédiction du risque dans la cardiomyopathie hypertrophique. L'étendue de la fibrose myocardique en LGE (% de masse VG) ressortait comme le prédicteur le plus puissant d'événements graves (HR 1,86), devant la masse et le volume télésystolique du ventricule gauche. Ces résultats plaident pour intégrer l'IRM au-delà de la seule prédiction de mort subite des recommandations actuelles, jugées imparfaites.",
+      "type": "etude",
+      "sous_theme": "Imagerie",
+      "journal": "JAMA",
+      "date": "2026-06-09",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42113540/",
+      "marquant": false
+    },
+    {
+      "id": "pubmed-42260102",
+      "titre": "Effects of SGLT2 inhibition on incident heart failure in carriers of cardiomyopathy-associated genetic variants",
+      "breve": "Analyse génétique de l'essai DECLARE-TIMI 58 (12 685 patients diabétiques de type 2 séquencés) évaluant la dapagliflozine selon le statut de porteur d'un variant pathogène de gène de cardiomyopathie (121 porteurs). Sur 4,2 ans, la dapagliflozine réduisait bien plus fortement les hospitalisations pour insuffisance cardiaque chez les porteurs (HR 0,18) que chez les non-porteurs (HR 0,70 ; p interaction 0,03), avec une réduction de risque absolu de 13 % contre 1 %. Le bénéfice persistait chez les porteurs sans antécédent d'insuffisance cardiaque, suggérant un intérêt préventif précoce des SGLT2i chez ces sujets — à confirmer par un essai dédié.",
+      "type": "etude",
+      "sous_theme": "Insuffisance cardiaque",
+      "journal": "Nature Medicine",
+      "date": "2026-06-08",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42260102/",
+      "marquant": false
+    },
+    {
+      "id": "pubmed-42253238",
+      "titre": "Survodutide Once Weekly for the Treatment of Adults with Obesity",
+      "breve": "Essai de phase 3 randomisé en double aveugle (725 adultes obèses sans diabète) évaluant le survodutide, double agoniste des récepteurs du glucagon et du GLP-1, en injection hebdomadaire. À 76 semaines, la perte de poids moyenne atteignait −12,2 % (3,6 mg) et −13,0 % (6,0 mg) contre −5,4 % sous placebo (p<0,001). Les effets indésirables, surtout digestifs, étaient fréquents (80–90 %) mais généralement légers à modérés. Confirme l'efficacité d'une nouvelle molécule de la classe des incrétines à double mécanisme, sans encore de données sur les événements cardiovasculaires durs.",
+      "type": "etude",
+      "sous_theme": "HTA / Prévention",
+      "journal": "New England Journal of Medicine",
+      "date": "2026-06-07",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42253238/",
+      "marquant": false
+    },
+    {
       "id": "pubmed-41910347",
       "titre": "Left Atrial Appendage Closure or Anticoagulation for Atrial Fibrillation",
       "breve": "Essai randomisé international (CHAMPION-AF, 3 000 patients en fibrillation atriale éligibles à l'anticoagulation, CHA₂DS₂-VASc moyen 3,5) comparant la fermeture percutanée de l'auricule gauche aux anticoagulants oraux directs (AOD). À 3 ans, la fermeture était non-inférieure aux AOD sur le critère composite décès cardiovasculaire / AVC / embolie systémique (5,7 % vs 4,8 %), et supérieure pour les hémorragies non liées à la procédure (10,9 % vs 19,0 % ; HR 0,55). Ouvre la voie à la fermeture de l'auricule comme alternative chez des patients pourtant éligibles à l'anticoagulation, pas seulement chez les contre-indiqués.",
@@ -302,6 +398,54 @@
     }
   ],
   "mises_au_point": [
+    {
+      "id": "pubmed-42263157",
+      "titre": "2026 AHA/ACC/ADA/ASN Guideline for the Prevention, Detection, Evaluation, and Management of Cardiovascular-Kidney-Metabolic Syndrome",
+      "breve": "Nouvelle recommandation conjointe AHA/ACC/ADA/ASN 2026 sur le syndrome cardio-réno-métabolique (CKM), qui remplace et élargit les recommandations de 2013 sur l'obésité. Elle formalise la prise en charge intégrée des interconnexions entre facteurs de risque métaboliques (obésité, diabète de type 2), maladie rénale chronique et maladie cardiovasculaire, sous la forme d'un document évolutif (« living guideline »). Destinée aux cardiologues, endocrinologues, néphrologues et médecins de premier recours, elle promeut une approche décloisonnée du dépistage, de la stratification du risque et du traitement de ces patients.",
+      "type": "recommandation",
+      "sous_theme": "HTA / Prévention",
+      "journal": "Circulation",
+      "date": "2026-06-09",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42263157/",
+      "marquant": false
+    },
+    {
+      "id": "pubmed-41342194",
+      "titre": "Cardiovascular disease in women: traditional and sex-specific risk factors",
+      "breve": "Revue de l'European Heart Journal consacrée aux facteurs de risque cardiovasculaire chez la femme, traditionnels et spécifiques au sexe. Elle rappelle que la maladie cardiovasculaire tue plus de femmes que les cancers du sein et du poumon et la BPCO réunis, mais reste sous-identifiée, retardant diagnostic et traitement. L'article insiste sur des marqueurs de risque précoces (dès la période préménopausique), sur les étapes clés du parcours de vie (grossesse, transition ménopausique) et sur des seuils diagnostiques propres aux femmes. Un appel à repenser la prévention cardiovasculaire féminine sur l'ensemble de la vie.",
+      "type": "synthese",
+      "sous_theme": "HTA / Prévention",
+      "journal": "European Heart Journal",
+      "date": "2026-06-09",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/41342194/",
+      "marquant": false
+    },
+    {
+      "id": "pubmed-42269153",
+      "titre": "Antidotes for Anticoagulation Reversal",
+      "breve": "Revue pratique du New England Journal of Medicine sur les antidotes de réversion des anticoagulants, face à la hausse des hémorragies majeures. Le sulfate de protamine neutralise l'héparine non fractionnée (mais pas les HBPM ni le fondaparinux) ; les concentrés de complexe prothrombinique à 4 facteurs réversent les antivitamines K ; l'idarucizumab cible le dabigatran (avec possible rebond) et l'andexanet alfa les anti-Xa directs. L'article souligne les incertitudes persistantes sur l'andexanet (balance efficacité/sécurité, rebond, coût, usage périopératoire) et le recours hors AMM aux concentrés de complexe prothrombinique, et appelle à des preuves de meilleure qualité.",
+      "type": "synthese",
+      "sous_theme": "Rythmologie",
+      "journal": "New England Journal of Medicine",
+      "date": "2026-06-11",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42269153/",
+      "marquant": false
+    },
+    {
+      "id": "rss-cardiologie-pratique-0038363",
+      "titre": "Diabète de type 2 : le bénéfice cardiovasculaire des agonistes du récepteur du GLP-1 est largement renforcé par les modifications favorables du mode de vie",
+      "breve": "Synthèse de Cardiologie Pratique sur une étude de Nguyen et coll. (Lancet Diabetes & Endocrinology) explorant l'interaction, jamais vraiment étudiée, entre les agonistes du récepteur du GLP-1 et les habitudes de vie chez le diabétique de type 2. Le bénéfice cardiovasculaire de cette classe, déjà bien démontré, apparaît largement renforcé par des modifications favorables du mode de vie (alimentation, activité physique, sommeil, gestion du stress). Un argument supplémentaire pour associer systématiquement traitement pharmacologique et accompagnement hygiéno-diététique.",
+      "type": "synthese",
+      "sous_theme": "HTA / Prévention",
+      "journal": "Cardiologie Pratique",
+      "date": "2026-06-09",
+      "source_nom": "Cardiologie Pratique",
+      "source_url": "https://www.cardiologie-pratique.com/journal/article/0038363-diabete-type-2-benefice-cardiovasculaire-agonistes-recepteur-glp-1-est",
+      "marquant": false
+    },
     {
       "id": "pubmed-41478883",
       "titre": "Tricuspid valve disease: updates on diagnostic imaging and intervention",
