@@ -313,6 +313,18 @@
       "marquant": false
     },
     {
+      "id": "pubmed-42248158",
+      "titre": "Efficacy and safety of finerenone in patients with chronic kidney disease: an individual participant data pooled analysis (INFINITY).",
+      "breve": "La méta-analyse INFINITY regroupe les données individuelles de 14 574 participants aux essais FIDELIO-DKD, FIGARO-DKD et FIND-CKD, couvrant l'ensemble du spectre de la maladie rénale chronique — diabétique et non diabétique. Le finerenone réduisait de 24 % le risque de progression rénale (insuffisance rénale terminale ou déclin eGFR ≥ 57 % ; HR 0,76 [0,68–0,86]) et de 20 % le critère cardiovasculaire composite (HR 0,80), avec une réduction de la mortalité toutes causes de 12 % (HR 0,88). Ces bénéfices étaient cohérents quelle que soit l'étiologie de la MRC (diabétique ou non), le niveau d'eGFR, l'albuminurie, et l'utilisation concomitante d'iSGLT2. INFINITY consolide le finerenone comme traitement de fond de la MRC à large spectre, établissant son efficacité au-delà des seules néphropathies diabétiques.",
+      "type": "meta-analyse",
+      "sous_theme": "HTA / Prévention",
+      "journal": "Lancet",
+      "date": "2026-06-05",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42248158/",
+      "marquant": true
+    },
+    {
       "id": "pubmed-41910411",
       "titre": "Role of Atrial Pacing Support in Cardiac Resynchronization Therapy: A Noninferiority Randomized Trial",
       "breve": "Essai randomisé de non-infériorité (636 patients) comparant, chez des candidats à une resynchronisation cardiaque avec défibrillateur (CRT-D) sans dysfonction sinusale, un système à 2 sondes capable de détection atriale sans stimulation (CRT-DX) au système conventionnel à 3 sondes. Le critère composite à 1 an (mortalité, hospitalisation cardiovasculaire, complications de sonde) était non-inférieur (13,1 % vs 15,6 %), avec moins de complications liées à la sonde atriale (1,3 % vs 4,2 %) et un remodelage inverse équivalent. Suggère qu'on peut éviter la sonde atriale chez ces patients, réduisant les complications.",
@@ -394,6 +406,30 @@
       "date": "2026-06-03",
       "source_nom": "PubMed",
       "source_url": "https://pubmed.ncbi.nlm.nih.gov/42234492/",
+      "marquant": false
+    },
+    {
+      "id": "pubmed-42268156",
+      "titre": "Angiographic Quantitative Flow Ratio-Guided Coronary Intervention: 5-Year Follow-Up From the FAVOR III China Randomized Trial.",
+      "breve": "Le suivi à 5 ans de l'essai randomisé FAVOR III China (patients avec lésions coronaires intermédiaires 50–90 %) confirme la supériorité du guidage fonctionnel par quantitative flow ratio (QFR) sur le guidage angiographique seul. Le critère composite (décès, IDM, revascularisation ischémique) à 5 ans était réduit dans le groupe QFR (17,5 % vs 21,1 % ; HR 0,80 [0,69–0,92]), notamment grâce à une réduction des infarctus (5,8 % vs 9,0 % ; HR 0,63). L'analyse en landmark révèle que ce bénéfice est largement acquis dans les 2 premières années ; entre 2 et 5 ans, aucune différence significative n'est observée (HR 0,90 ; p = 0,32). Ces données renforcent la légitimité du QFR comme outil décisionnel en salle de cathétérisme, tout en confirmant que son apport se joue principalement au moment de la décision initiale.",
+      "type": "etude",
+      "sous_theme": "Coronaire",
+      "journal": "Journal of the American College of Cardiology",
+      "date": "2026-06-02",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42268156/",
+      "marquant": false
+    },
+    {
+      "id": "pubmed-42233552",
+      "titre": "Kidney and Survival Benefits of Semaglutide in Diabetes With Chronic Kidney Disease: FLOW Trial Cardiovascular Subgroup Analyses.",
+      "breve": "Cette analyse de sous-groupes pré-spécifiés de l'essai FLOW explore les effets du sémaglutide sous-cutané (1,0 mg/semaine) selon le statut cardiovasculaire chez 3 533 patients diabétiques avec MRC. La réduction du critère rénal principal était cohérente dans tous les sous-groupes : présence ou non d'une ASCVD (HR 0,80 vs 0,74), d'une insuffisance cardiaque (HR 0,67 vs 0,79) et d'un haut risque CV sans maladie établie (HR 0,73). Les NNT à 3 ans pour prévenir un événement rénal primaire étaient de 22 (ASCVD), 13 (insuffisance cardiaque) et 17 (haut risque CV). Le bénéfice sur la mortalité toutes causes était constant dans l'ensemble des sous-groupes. Ces résultats renforcent l'indication du sémaglutide dans la MRC diabétique indépendamment du profil cardiovasculaire associé.",
+      "type": "etude",
+      "sous_theme": "HTA / Prévention",
+      "journal": "Journal of the American College of Cardiology",
+      "date": "2026-06-02",
+      "source_nom": "PubMed",
+      "source_url": "https://pubmed.ncbi.nlm.nih.gov/42233552/",
       "marquant": false
     },
     {
