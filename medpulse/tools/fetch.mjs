@@ -28,7 +28,7 @@ const fmtPubmed = (d) =>
 const fmtISO = (d) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 
-const dateRange = `("${fmtPubmed(past)}"[PDAT] : "${fmtPubmed(today)}"[PDAT])`;
+const dateRange = `("${fmtPubmed(past)}"[EDAT] : "${fmtPubmed(today)}"[EDAT])`;
 
 // ── Décodage minimal des entités XML/HTML ────────────────────────────────────
 function decode(s) {
@@ -86,11 +86,12 @@ function parseArticle(a) {
   // DOI éventuel
   const doi = (a.match(/<ELocationID[^>]*EIdType="doi"[^>]*>([\s\S]*?)<\/ELocationID>/) || [])[1] || "";
 
-  // Date : PubDate (date de l'issue) en priorité — cohérence avec [PDAT] de la requête
-  // Sinon ArticleDate (date online). Ainsi un article de mars dans une issue de mai → affiché mai.
+  // Date : ArticleDate (epub, date de mise en ligne) en priorité — cohérence avec [EDAT] de la requête
+  // Sinon PubDate (date de l'issue). Ainsi un article mis en ligne en mars → affiché mars.
   let y = "", mo = "", d = "";
+  const ad = a.match(/<ArticleDate[^>]*>([\s\S]*?)<\/ArticleDate>/);
   const pd = a.match(/<PubDate>([\s\S]*?)<\/PubDate>/);
-  const src = pd ? pd[1] : (a.match(/<ArticleDate[^>]*>([\s\S]*?)<\/ArticleDate>/) || [])[1] || "";
+  const src = ad ? ad[1] : (pd ? pd[1] : "");
   y = (src.match(/<Year>(\d+)<\/Year>/) || [])[1] || "";
   mo = (src.match(/<Month>(\w+)<\/Month>/) || [])[1] || "";
   d = (src.match(/<Day>(\d+)<\/Day>/) || [])[1] || "";
